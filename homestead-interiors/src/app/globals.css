@@ -1,0 +1,285 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   HOMESTEAD INTERIORS — DESIGN TOKENS  (bright theme)
+   ------------------------------------------------------------------
+   White and light grey carry the site. Sage leads the accents, with
+   muted blue and champagne as supporting highlights.
+
+   Contrast rule: the brief's accent colours (sage, blue, champagne) are
+   too light to be readable as text on white (1.8–2.6 : 1). Use them for
+   fills, rules, dots, glows and badges — and as text only on `ink`.
+   For accent-coloured text on light backgrounds use the `-deep` shades,
+   which keep the same hue and pass WCAG AA (≈5 : 1).
+   ------------------------------------------------------------------ */
+@theme {
+  /* Surfaces */
+  --color-paper: #ffffff; /* primary background */
+  --color-mist: #f4f5f6; /* secondary background */
+  --color-cloud: #eceff1; /* alternative background, card + field fills */
+  --color-line: #e1e5e8; /* hairlines, borders */
+
+  /* Type */
+  --color-ink: #252a30; /* primary text, dark surfaces */
+  --color-graphite: #68717a; /* secondary text (slate grey) */
+
+  /* Accents */
+  --color-sage: #91a58b;
+  --color-sage-deep: #56704f; /* sage for text on light backgrounds */
+  --color-sage-soft: #e5ebe3; /* tinted surface */
+  --color-haze: #a9c5d8; /* muted blue */
+  --color-haze-deep: #4e7590;
+  --color-haze-soft: #e6eff5;
+  --color-champagne: #c5a66a;
+  --color-champagne-deep: #8a6a2e;
+  --color-champagne-soft: #f6efe1;
+
+  --font-serif: var(--font-display), "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-frame: 1.25rem; /* image frames */
+  --radius-card: 1.5rem; /* cards and panels */
+
+  --shadow-soft: 0 1px 2px rgb(37 42 48 / 0.04), 0 8px 24px -12px rgb(37 42 48 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(37 42 48 / 0.04), 0 24px 48px -20px rgb(37 42 48 / 0.22);
+
+  --breakpoint-3xl: 1800px;
+}
+
+:root {
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --section-y: clamp(5.5rem, 12vw, 10.5rem);
+  --header-h: 5.25rem;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-sage);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-sage);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  img {
+    user-select: none;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  /* Editorial type scale — bolder weights for a confident, readable hierarchy.
+     Fraunces' optical sizing sharpens contrast at display sizes automatically. */
+  .display-xl {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.9rem, 7.6vw, 8.25rem);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .display-lg {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 5.2vw, 5.6rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .display-md {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2rem, 3.6vw, 3.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .display-sm {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.45rem, 2vw, 2rem);
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+  }
+  /* Italic accent words inside headings: lighter weight, sage-deep. */
+  .display-xl em,
+  .display-lg em,
+  .display-md em,
+  .display-sm em {
+    font-weight: 400;
+  }
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .lede {
+    font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+    line-height: 1.75;
+    color: var(--color-graphite);
+  }
+
+  /* Hairline rule */
+  .rule {
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  /* Text-link with animated underline (sage) */
+  .link-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.25em;
+    height: 1.5px;
+    border-radius: 2px;
+    background: var(--color-sage);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s var(--ease-out-soft);
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after,
+  .link-underline[aria-current="page"]::after,
+  .link-underline[aria-pressed="true"]::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Interactive card: white surface, hairline border, lifts on hover. */
+  .card {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    transition:
+      transform 0.6s var(--ease-out-soft),
+      box-shadow 0.6s var(--ease-out-soft),
+      border-color 0.6s var(--ease-out-soft);
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+    border-color: transparent;
+  }
+
+  /* Process timeline: a step's marker fills with sage once reached. */
+  .process-step.is-on .process-marker {
+    background: var(--color-sage);
+    border-color: transparent;
+    color: var(--color-ink);
+  }
+
+  /* Soft ambient colour fields — sage, blue and champagne glows on white. */
+  .ambient {
+    position: relative;
+    isolation: isolate;
+  }
+  .ambient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(42rem 28rem at 88% 0%, rgb(169 197 216 / 0.28), transparent 70%),
+      radial-gradient(34rem 26rem at 0% 100%, rgb(145 165 139 / 0.18), transparent 70%);
+  }
+
+  /* Line-split reveal wrapper (used by the animation system) */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+  .line-mask > .line-inner {
+    display: block;
+  }
+}
+
+/* Gallery + lightbox entrances */
+@keyframes gallery-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes lb-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: none;
+  }
+}
