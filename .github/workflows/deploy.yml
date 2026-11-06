@@ -38,10 +38,15 @@ jobs:
         working-directory: ./melt-theory
         run: npm run build
 
+      - name: Prepare site
+        run: |
+          mkdir -p site/melt-theory
+          cp -r melt-theory/dist/. site/melt-theory/
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./melt-theory/dist
+       uses: actions/upload-pages-artifact@v3
+       with:
+       path: ./site
 
   deploy:
     environment:
