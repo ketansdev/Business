@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MELT THEORY — The Art of Melting Moments</title>
+    <meta name="description" content="MELT THEORY is a fictional luxury ice cream studio. Crafted to melt. Designed to be remembered." />
+    <meta name="theme-color" content="#0b0705" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;1,400;1,500&family=Manrope:wght@400;500;600&display=swap"
+    />
+
+    <!-- Critical hero assets: needed the moment the intro ends -->
+    <link rel="preload" as="image" type="image/webp"
+      href="./assets/img/hero_icecream-1200.webp"
+      imagesrcset="./assets/img/hero_icecream-640.webp 640w, ./assets/img/hero_icecream-1200.webp 1200w"
+      imagesizes="(max-width: 700px) 90vw, 74vh" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp"
+      imagesrcset="./assets/img/splash_left-400.webp 400w, ./assets/img/splash_left-665.webp 665w" imagesizes="34vw" />
+    <link rel="preload" as="image" type="image/webp"
+      imagesrcset="./assets/img/splash_right-400.webp 400w, ./assets/img/splash_right-678.webp 678w" imagesizes="34vw" />
+
+    <style>
+      /* paint the brand background before JS/CSS bundles arrive (no white flash) */
+      html, body { background: #0b0705; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="color:#f3e6cf;font-family:sans-serif;padding:2rem">MELT THEORY — The art of melting moments. Please enable JavaScript for the full experience.</p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
