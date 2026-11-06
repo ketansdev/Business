@@ -44,9 +44,9 @@ jobs:
           cp -r melt-theory/dist/. site/melt-theory/
 
       - name: Upload artifact
-       uses: actions/upload-pages-artifact@v3
-       with:
-       path: ./site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
 
   deploy:
     environment:
