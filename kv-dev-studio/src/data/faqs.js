@@ -5,7 +5,7 @@
 export const faqs = [
   {
     q: 'What services does KV DEV STUDIO offer?',
-    a: 'We offer five services: website design and development, domain and hosting setup, Google Business Profile and local SEO, social media management, and branding and graphic design.',
+    a: 'We offer four core services: website design and development, Google Business Profile and local SEO, social media management, and branding and graphic design. Domain and hosting setup is available as an add-on.',
   },
   {
     q: 'Can I hire you for just one service?',

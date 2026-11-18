@@ -26,8 +26,9 @@ export const navLinks = [
 ];
 
 /**
- * Social profiles. Leave the list empty until real profile URLs exist —
- * the footer only renders this block when at least one entry is present.
+ * Social profiles. Leave the list empty until real profile URLs exist.
+ * The footer always shows WhatsApp, email and phone icons, and adds one icon per entry here
+ * (Instagram, LinkedIn, Facebook, X, Behance, Dribbble and YouTube get their own icon; others show a globe).
  * Example: { label: 'Instagram', href: 'https://instagram.com/yourhandle' }
  */
 export const socialLinks = [];

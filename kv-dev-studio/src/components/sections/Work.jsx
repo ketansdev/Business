@@ -2,7 +2,9 @@ import { ArrowUpRight, Globe } from '@phosphor-icons/react';
 import SectionHeading from '../ui/SectionHeading';
 import Button from '../ui/Button';
 import { ImageReveal, Reveal } from '../ui/Reveal';
+import ResponsiveImage from '../ui/ResponsiveImage';
 import { projects } from '../../data/projects';
+import { imageSizes } from '../../data/images';
 import { previews } from '../mockups/Previews';
 import ScaledPreview from '../mockups/ScaledPreview';
 
@@ -33,8 +35,8 @@ function SiteCover({ title, domain, category, cover }) {
   );
 }
 
-function ProjectCard({ project, index }) {
-  const { title, category, concept, image, preview, link, domain, cover } = project;
+function ProjectCard({ project, index, centred }) {
+  const { title, category, concept, image, alt, preview, link, domain, cover } = project;
   const Preview = previews[preview];
   const Wrapper = link ? 'a' : 'div';
   const wrapperProps = link
@@ -43,7 +45,15 @@ function ProjectCard({ project, index }) {
 
   let media;
   if (image) {
-    media = <img src={image} alt={`Homepage of the ${title} website`} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />;
+    media = (
+      <ResponsiveImage
+        image={image}
+        alt={alt ?? `Homepage of the ${title} website`}
+        sizes={imageSizes.card}
+        // Composed 16:10 artwork stays centred; a plain full page screenshot is pinned to its top
+        className={`h-full w-full object-cover ${typeof image === 'string' ? 'object-top' : 'object-center'}`}
+      />
+    );
   } else if (link) {
     media = (
       <ScaledPreview baseWidth={760}>
@@ -61,19 +71,23 @@ function ProjectCard({ project, index }) {
   }
 
   return (
-    <li>
+    // An odd last card spans both columns at one column's width (gap-x-6 = 24px), centred, so the grid never ends on a hole
+    <li className={centred ? 'md:col-span-2 md:mx-auto md:w-[calc((100%_-_24px)/2)]' : undefined}>
       <Wrapper {...wrapperProps} className="group block rounded-3xl">
-        <ImageReveal delay={(index % 2) * 0.08}>
-          <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-paper-sunken ring-1 ring-line/5">
-            <div className="absolute inset-0 transition-transform duration-700 ease-base group-hover:scale-[1.03]">{media}</div>
-            {/* outer radius 24, inset 16: badge radius 8 */}
+        <ImageReveal delay={centred ? 0 : (index % 2) * 0.08}>
+          {/* isolate keeps the rounded clip intact while the image scales (Safari) */}
+          <div className="relative isolate aspect-[16/10] overflow-hidden rounded-3xl bg-paper-sunken ring-1 ring-line/5">
+            <div className="absolute inset-0 transition-transform duration-700 ease-base group-hover:scale-[1.04] group-focus-visible:scale-[1.04]">
+              {media}
+            </div>
+            {/* outer radius 24, inset 16: pill badges */}
             {concept ? (
-              <span className="caption-3 absolute left-4 top-4 rounded-lg bg-white/90 px-2 py-1 uppercase tracking-widest text-ink shadow-soft backdrop-blur">
+              <span className="type-label absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-ink shadow-soft backdrop-blur">
                 Concept
               </span>
             ) : (
               link && (
-                <span className="caption-3 absolute right-4 top-4 inline-flex items-center gap-2 rounded-lg bg-white/90 px-2 py-1 uppercase tracking-widest text-ink shadow-soft backdrop-blur">
+                <span className="type-label absolute right-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-ink shadow-soft backdrop-blur">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#1FAF54]" aria-hidden="true" />
                   Live
                 </span>
@@ -81,18 +95,28 @@ function ProjectCard({ project, index }) {
             )}
           </div>
         </ImageReveal>
-        <div className="mt-4 flex flex-col gap-1 px-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-          <h3 className="title-2 inline-flex items-center gap-2">
-            {title}
-            {link && (
-              <ArrowUpRight
-                size={18}
-                aria-hidden="true"
-                className="text-ink-muted transition-transform duration-500 ease-base group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-              />
-            )}
-          </h3>
-          <p className="caption-2 text-ink-muted sm:shrink-0">{category}</p>
+        <div className="mt-6 flex items-start justify-between gap-4 px-1">
+          <div className="min-w-0">
+            <h3 className="type-h3">{title}</h3>
+            <ul className="mt-3 flex flex-wrap gap-2" aria-label="Project details">
+              <li
+                className={`type-small rounded-full px-3 py-1 font-medium ${
+                  concept ? 'bg-paper-sunken text-ink-muted' : 'bg-accent-soft text-accent-ink'
+                }`}
+              >
+                {concept ? 'Studio concept' : 'Client project'}
+              </li>
+              <li className="type-small rounded-full px-3 py-1 text-ink-muted ring-1 ring-inset ring-line/10">{category}</li>
+            </ul>
+          </div>
+          {link && (
+            <span
+              aria-hidden="true"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 ring-inset ring-line/15 transition-colors duration-300 group-hover:bg-ink group-hover:text-paper group-hover:ring-ink"
+            >
+              <ArrowUpRight size={18} className="transition-transform duration-500 ease-base group-hover:rotate-45" />
+            </span>
+          )}
         </div>
       </Wrapper>
     </li>
@@ -102,32 +126,37 @@ function ProjectCard({ project, index }) {
 export default function Work() {
   const hasConcepts = projects.some((p) => p.concept);
   return (
-    <section id="work" aria-labelledby="work-title" className="py-20 sm:py-24">
+    <section id="work" aria-labelledby="work-title" className="section-y">
       <div className="container-x">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <SectionHeading
             id="work-title"
+            index="04"
             eyebrow="Our work"
-            title="A Glimpse of What We Create"
-            description="Websites we have designed and built, live and in use, alongside our brand and social design work."
+            title={
+              <>
+                A Glimpse of What We <span className="text-accent">Create</span>
+              </>
+            }
+            description="Websites we have designed and built, live and in use, alongside our brand, social media and local SEO work."
           />
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} className="shrink-0">
             <Button href="#contact" variant="secondary" arrow>
               Start your project
             </Button>
           </Reveal>
         </div>
 
-        <ul className="mt-12 grid gap-x-4 gap-y-10 md:grid-cols-2">
+        <ul className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2 lg:mt-16 lg:gap-y-16">
           {projects.map((p, i) => (
-            <ProjectCard key={p.id} project={p} index={i} />
+            <ProjectCard key={p.id} project={p} index={i} centred={projects.length % 2 === 1 && i === projects.length - 1} />
           ))}
         </ul>
 
         {hasConcepts && (
           <Reveal>
-            <p className="caption-2 mt-12 flex items-start gap-2 text-ink-muted">
-              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+            <p className="type-small mt-16 flex items-start gap-2 border-t border-line/10 pt-6 text-ink-muted">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
               Projects marked &ldquo;Concept&rdquo; are studio demonstration designs created to show our approach. They are not
               client work, and the brand names shown are fictional.
             </p>

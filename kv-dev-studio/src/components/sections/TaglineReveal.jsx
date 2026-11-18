@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 // One entry per line on larger screens, broken where the thought breaks
 const LINES = ['Your customers are already', 'searching online.', 'We make sure they find', 'a business worth choosing.'];
 const words = LINES.flatMap((line, li) => line.split(' ').map((w, wi, arr) => ({ w, lineEnd: wi === arr.length - 1 && li < LINES.length - 1 })));
+// The closing words carry the brand accent once revealed
+const ACCENT_FROM = words.length - 3;
 
 /**
- * Large type tagline. Each word moves from a muted tone to full colour, one at a time in reading order,
- * driven by a single scroll listener throttled through requestAnimationFrame.
+ * Large promise statement, given most of a screen on desktop. Each word moves from a muted tone to full colour,
+ * one at a time in reading order, driven by a single scroll listener throttled through requestAnimationFrame.
  */
 export default function TaglineReveal() {
   const ref = useRef(null);
@@ -46,18 +48,24 @@ export default function TaglineReveal() {
   }, []);
 
   return (
-    <section aria-label="Our promise" className="py-24">
+    <section aria-label="Our promise" className="section-y flex items-center lg:min-h-[80svh]">
       <div className="container-x">
-        <p ref={ref} className="heading-3 mx-auto max-w-hero text-center md:heading-2">
-          {words.map(({ w, lineEnd }, i) => (
-            <span key={i}>
-              <span className="transition-opacity duration-500 ease-base" style={{ opacity: reduced || i < count ? 1 : 0.3 }}>
-                {w}
+        <p ref={ref} className="type-statement mx-auto max-w-4xl text-center">
+          {words.map(({ w, lineEnd }, i) => {
+            const on = reduced || i < count;
+            return (
+              <span key={i}>
+                <span
+                  className={`transition-[opacity,color] duration-500 ease-base ${on && i >= ACCENT_FROM ? 'text-accent' : ''}`}
+                  style={{ opacity: on ? 1 : 0.2 }}
+                >
+                  {w}
+                </span>
+                {i < words.length - 1 && ' '}
+                {lineEnd && <br className="hidden sm:inline" />}
               </span>
-              {i < words.length - 1 && ' '}
-              {lineEnd && <br className="hidden sm:inline" />}
-            </span>
-          ))}
+            );
+          })}
         </p>
       </div>
     </section>

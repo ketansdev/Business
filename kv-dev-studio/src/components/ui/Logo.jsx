@@ -11,11 +11,13 @@ export default function Logo({ className = '', inverted = false }) {
         alt="KV"
         width="74"
         height="36"
-        className="h-9 w-auto shrink-0"
+        className="h-8 w-auto shrink-0 sm:h-9"
         decoding="async"
         fetchpriority={inverted ? undefined : 'high'}
       />
-      <span className={`body-4 whitespace-nowrap uppercase tracking-widest ${inverted ? 'text-paper' : 'text-ink'}`}>
+      <span
+        className={`whitespace-nowrap font-display text-sm font-bold uppercase leading-none tracking-[0.18em] ${inverted ? 'text-paper' : 'text-ink'}`}
+      >
         Dev Studio
       </span>
     </span>

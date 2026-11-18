@@ -1,5 +1,6 @@
 import { Devices, CloudCheck, MapPin, Megaphone, PenNib } from '@phosphor-icons/react';
 
+/** The four primary services, in display order. */
 export const services = [
   {
     id: 'web',
@@ -12,19 +13,6 @@ export const services = [
       'Fast, mobile friendly build',
       'Search friendly page structure',
       'Contact forms and WhatsApp integration',
-    ],
-  },
-  {
-    id: 'hosting',
-    icon: CloudCheck,
-    title: 'Domain & Hosting Setup',
-    description:
-      'Get the right domain name for your business and your website live on dependable hosting, set up and connected for you.',
-    includes: [
-      'Domain name guidance and registration',
-      'Hosting setup and configuration',
-      'SSL certificate for a secure site',
-      'Domain and DNS connection',
     ],
   },
   {
@@ -67,3 +55,23 @@ export const services = [
     ],
   },
 ];
+
+/** Optional add-ons: offered alongside a primary service, shown separately from the four cards. */
+export const addOns = [
+  {
+    id: 'hosting',
+    icon: CloudCheck,
+    title: 'Domain & Hosting Setup',
+    description:
+      'Get the right domain name for your business and your website live on dependable hosting, set up and connected for you.',
+    includes: [
+      'Domain name guidance and registration',
+      'Hosting setup and configuration',
+      'SSL certificate for a secure site',
+      'Domain and DNS connection',
+    ],
+  },
+];
+
+/** Everything a visitor can enquire about (contact form options). */
+export const allServices = [...services, ...addOns];

@@ -31,12 +31,18 @@ function MenuIcon({ open }) {
   );
 }
 
+/**
+ * Fixed header aligned to the content container: logo left, links centred, CTA right.
+ * At the top of the page it is transparent and 80px tall; once the page scrolls it becomes a frosted
+ * 64px bar with a hairline edge. The hero reserves enough top padding that it never sits under the bar.
+ */
 export default function Header() {
   const [open, setOpen] = useState(false);
   const atTop = useInView('top-sentinel');
   const active = useActiveSection(sectionIds);
   const toggleRef = useRef(null);
   const panelRef = useRef(null);
+  const solid = !atTop || open;
 
   // Mobile menu: lock scroll, close on Escape or desktop resize, keep focus inside.
   useEffect(() => {
@@ -70,7 +76,14 @@ export default function Header() {
   const close = () => setOpen(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/* Bar background on its own layer: a backdrop-filter on <header> would trap the fixed mobile panel inside the bar */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-x-0 top-0 h-full border-b transition-[background-color,border-color,box-shadow] duration-500 ease-base ${
+          solid ? 'border-line/10 bg-paper/85 shadow-soft backdrop-blur-xl backdrop-saturate-150' : 'border-transparent bg-transparent'
+        }`}
+      />
       <a
         href="#main"
         className="button-sm sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-ink focus:px-3 focus:py-2 focus:text-paper"
@@ -78,15 +91,13 @@ export default function Header() {
         Skip to content
       </a>
 
-      {/* Floating, content sized bar */}
       <nav
         aria-label="Primary"
-        className={`relative z-10 mx-auto flex w-full max-w-container items-center justify-between gap-6 rounded-2xl p-2 pl-4
-          backdrop-blur-xl backdrop-saturate-150 transition-[background-color,box-shadow] duration-500 ease-base
-          lg:w-fit lg:justify-center
-          ${atTop && !open ? 'bg-paper/60 ring-1 ring-line/5' : 'bg-paper/80 shadow-soft ring-1 ring-line/10'}`}
+        className={`container-x relative z-10 grid grid-cols-[1fr_auto] items-center gap-6 transition-[height] duration-500 ease-base lg:grid-cols-[1fr_auto_1fr] ${
+          atTop ? 'h-16 lg:h-20' : 'h-16'
+        }`}
       >
-        <a href="#home" aria-label="KV DEV STUDIO, back to top" onClick={close} className="rounded-lg">
+        <a href="#home" aria-label="KV DEV STUDIO, back to top" onClick={close} className="justify-self-start rounded-lg">
           <Logo />
         </a>
 
@@ -98,14 +109,14 @@ export default function Header() {
                 {isActive && (
                   <motion.span
                     layoutId="nav-pill"
-                    className="absolute inset-0 rounded-lg bg-ink/5"
+                    className="absolute inset-0 rounded-full bg-ink/5"
                     transition={{ duration: 0.5, ease }}
                   />
                 )}
                 <a
                   href={l.href}
                   aria-current={isActive ? 'location' : undefined}
-                  className={`title-4 relative block rounded-lg px-3 py-2 transition-colors duration-300 ${
+                  className={`type-ui relative block rounded-full px-4 py-2 transition-colors duration-300 ${
                     isActive ? 'text-ink' : 'text-ink-muted hover:text-ink'
                   }`}
                 >
@@ -116,14 +127,14 @@ export default function Header() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
-          <Button href="#contact" size="sm" className="hidden sm:inline-flex">
+        <div className="flex items-center gap-2 justify-self-end">
+          <Button href="#contact" size="sm" arrow className="hidden sm:inline-flex">
             Let&rsquo;s Talk
           </Button>
           <button
             ref={toggleRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-ink transition-colors duration-300 hover:bg-ink/5 active:scale-[0.98] lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink ring-1 ring-inset ring-line/10 transition-colors duration-300 hover:bg-ink/5 active:scale-[0.98] lg:hidden"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -144,10 +155,10 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease }}
-            className="fixed inset-0 overflow-y-auto bg-paper/95 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 h-svh overflow-y-auto bg-paper/95 backdrop-blur-2xl lg:hidden"
           >
             <div className="container-x flex min-h-full flex-col pb-8 pt-24">
-              <ul className="flex flex-col">
+              <ul className="flex flex-col border-t border-line/10">
                 {navLinks.map((l, i) => {
                   const isActive = active === l.href.slice(1);
                   return (
@@ -156,14 +167,15 @@ export default function Header() {
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, ease, delay: i * stepFor(navLinks.length) }}
+                      className="border-b border-line/10"
                     >
                       <a
                         href={l.href}
                         onClick={close}
                         aria-current={isActive ? 'location' : undefined}
-                        className="heading-4 flex items-center justify-between rounded-lg py-3"
+                        className="type-h2 flex items-center justify-between py-4"
                       >
-                        <span className={isActive ? 'text-ink' : 'text-ink/60'}>{l.label}</span>
+                        <span className={isActive ? 'text-ink' : 'text-ink/55'}>{l.label}</span>
                         {isActive && <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />}
                       </a>
                     </motion.li>
@@ -182,7 +194,7 @@ export default function Header() {
                 <Button href={whatsappLink()} target="_blank" rel="noopener noreferrer" variant="whatsapp" icon={WhatsappLogo}>
                   Chat on WhatsApp
                 </Button>
-                <div className="caption-2 mt-2 flex flex-wrap justify-center gap-x-6 gap-y-2 text-ink-muted">
+                <div className="type-small mt-2 flex flex-wrap justify-center gap-x-6 gap-y-2 text-ink-muted">
                   <a href={site.phoneHref} className="inline-flex items-center gap-2 hover:text-ink"><Phone size={16} aria-hidden="true" />{site.phoneDisplay}</a>
                   <a href={`mailto:${site.email}`} className="inline-flex items-center gap-2 hover:text-ink"><EnvelopeSimple size={16} aria-hidden="true" />{site.email}</a>
                 </div>
