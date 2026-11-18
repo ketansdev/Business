@@ -1,0 +1,500 @@
+@import 'tailwindcss';
+
+/* -------------------------------------------------------------------------
+   KV DEV Studio — design tokens
+   Source of truth: design-system/kvdevstudio/MASTER.md
+   ------------------------------------------------------------------------- */
+@theme {
+  --color-ink: #08090b;
+  --color-ink-2: #101216;
+  --color-card: #15181d;
+  --color-card-2: #1b1f25;
+  --color-fg: #f5f5f5;
+  --color-muted: #a1a1aa;
+  --color-dim: #8a8a94;
+  --color-lime: #c6ff4d;
+  --color-lime-ink: #0b0f02;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-2: rgb(255 255 255 / 0.14);
+
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-marquee: marquee 46s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -8px;
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-ink);
+  }
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 96px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html:not([data-reduced]) {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: rgb(198 255 77 / 0.32);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 3px;
+  }
+  img,
+  svg,
+  canvas {
+    display: block;
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 4.4vw, 64px);
+  }
+  .section {
+    position: relative;
+    padding-block: clamp(88px, 11vw, 150px);
+  }
+  /* Micro-label system: mono, tracked caps */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 7.2vw, 7.25rem);
+    line-height: 0.92;
+    letter-spacing: -0.048em;
+  }
+  .glass {
+    background: rgb(16 18 22 / 0.55);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--color-line-2);
+  }
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(245 245 245 / 0.32);
+  }
+  /* Architectural 12-column guide lines */
+  .guide-lines {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: calc(100% / 12) 100%;
+  }
+  .grid-dots {
+    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  /* Animated underline: grows from the left */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease-out-quint);
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .skip-link {
+    position: fixed;
+    left: 16px;
+    top: 12px;
+    z-index: 200;
+    transform: translateY(-160%);
+    border-radius: 999px;
+    background: var(--color-lime);
+    color: var(--color-lime-ink);
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.25s var(--ease-out-quint);
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Hero 3D labels (positioned every frame from the WebGL scene)
+   ------------------------------------------------------------------------- */
+.hero-tag {
+  --dx: 1;
+  --dy: 0;
+  --angle: 0rad;
+}
+.hero-tag__line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 1px;
+  transform-origin: 0 50%;
+  transform: rotate(var(--angle));
+  background: linear-gradient(to right, rgb(198 255 77 / 0.7), rgb(245 245 245 / 0.18));
+}
+.hero-tag__pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  transform: translate(calc(-50% + var(--dx) * var(--reach, 64px)), calc(-50% + var(--dy) * var(--reach-y, 40px)));
+}
+
+/* -------------------------------------------------------------------------
+   Service visuals — small CSS 3D scenes driven by --px / --py (−1..1)
+   ------------------------------------------------------------------------- */
+.svc-visual {
+  --px: 0;
+  --py: 0;
+}
+.svc-layer {
+  transform: translate3d(calc(var(--px) * var(--depth, 10px)), calc(var(--py) * var(--depth, 10px)), 0);
+  transition: transform 0.6s var(--ease-out-expo);
+}
+@keyframes browser-scroll {
+  0%,
+  24% {
+    transform: translateY(0);
+  }
+  50%,
+  62% {
+    transform: translateY(-38%);
+  }
+  90%,
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes cursor-path {
+  0%,
+  5% {
+    left: 78%;
+    top: 84%;
+  }
+  13%,
+  19% {
+    left: 18%;
+    top: 47%;
+  }
+  48% {
+    left: 66%;
+    top: 34%;
+  }
+  76% {
+    left: 40%;
+    top: 70%;
+  }
+  100% {
+    left: 78%;
+    top: 84%;
+  }
+}
+@keyframes btn-press {
+  0%,
+  14%,
+  19%,
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  16% {
+    filter: brightness(1.3);
+    transform: scale(0.94);
+  }
+}
+/* Bob/scale only — the centring offset lives on the element (translate). */
+@keyframes pin-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes pin-shadow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(0.78);
+    opacity: 0.32;
+  }
+}
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+@keyframes card-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -7px;
+  }
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.06);
+  }
+}
+
+/* Service detail overlay: hover-capable devices reveal it on interaction,
+   touch devices get the static tag list instead. */
+.svc-overlay {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .svc-overlay {
+    display: block;
+    transform: translateY(calc(100% + 16px));
+    opacity: 0;
+    transition:
+      transform 0.6s var(--ease-out-expo),
+      opacity 0.4s var(--ease-standard);
+  }
+  .svc-card:hover .svc-overlay,
+  .svc-card:focus-within .svc-overlay {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .svc-card:hover .svc-stage,
+  .svc-card:focus-within .svc-stage {
+    opacity: 0.45;
+    filter: blur(1px);
+  }
+  .svc-tags {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Film grain — unifies the UI with the 3D renders and kills banding
+   ------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* -------------------------------------------------------------------------
+   Reduced motion: every ambient loop rests on its final readable state
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+html[data-reduced] *,
+html[data-reduced] *::before,
+html[data-reduced] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Scroll-driven hero: service nodes, lime tip nodes, threads
+   ------------------------------------------------------------------------- */
+.svc-node {
+  --lift: 0px;
+  --hit: 80px;
+  --dim: 1;
+}
+.svc-node__hit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--hit);
+  height: var(--hit);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+  background: transparent;
+}
+.svc-node[data-live='true'] .svc-node__hit {
+  pointer-events: auto;
+}
+.svc-node__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  transform: translate(-50%, calc(-50% + var(--lift)));
+  opacity: var(--dim);
+  transition:
+    border-color 0.35s var(--ease-standard),
+    background-color 0.35s var(--ease-standard),
+    color 0.35s var(--ease-standard);
+}
+.hero-node-dot {
+  --glow: 0;
+  box-shadow:
+    0 0 0 calc(3px + var(--glow) * 3px) rgb(198 255 77 / calc(0.12 + var(--glow) * 0.16)),
+    0 0 calc(var(--glow) * 22px) rgb(198 255 77 / calc(var(--glow) * 0.75));
+}
+.svc-target .svc-card {
+  transition:
+    border-color 0.6s var(--ease-standard),
+    box-shadow 0.6s var(--ease-standard);
+}
+.svc-target.is-targeted .svc-card {
+  border-color: rgb(198 255 77 / 0.55);
+  box-shadow:
+    0 0 0 1px rgb(198 255 77 / 0.3),
+    0 40px 90px -40px rgb(198 255 77 / 0.35);
+}
+
+/* -------------------------------------------------------------------------
+   Cinematic services stage
+   ------------------------------------------------------------------------- */
+.svc-shell {
+  will-change: transform, filter, opacity;
+  transform-origin: 50% 50%;
+}
+.svc-shell[data-active='false'] {
+  pointer-events: none;
+}
+/* Only the focused card runs its ambient loops */
+.svc-shell[data-active='false'] * {
+  animation-play-state: paused !important;
+}
+.svc-stage-card {
+  width: min(1060px, calc(100vw - 500px));
+  height: min(620px, calc(100svh - 220px));
+  min-height: 420px;
+}
+@media (max-width: 1359px) {
+  .svc-stage-card {
+    width: min(1060px, calc(100vw - 230px));
+  }
+}
+@media (max-width: 1023px) {
+  .svc-stage-card {
+    width: calc(100vw - 170px);
+    height: min(840px, calc(100svh - 200px));
+  }
+}
+.svc-card-glow {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-standard);
+}
+.svc-shell[data-active='true'] .svc-card-glow {
+  opacity: 0.55;
+}
+.svc-stage-card:hover .svc-card-glow {
+  opacity: 1;
+}
+.svc-stage-card {
+  transition: box-shadow 0.6s var(--ease-standard);
+}
+.svc-stage-card.is-targeted {
+  border-color: rgb(198 255 77 / 0.55);
+  box-shadow:
+    0 0 0 1px rgb(198 255 77 / 0.3),
+    0 70px 140px -50px rgb(0 0 0 / 0.95),
+    0 40px 100px -40px rgb(198 255 77 / 0.3);
+}

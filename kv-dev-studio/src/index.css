@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Brand tokens (RGB triplets so Tailwind opacity modifiers work).
+  To match the official KV DEV STUDIO palette, change the values here only.
+*/
+:root {
+  --ink: 24 24 24;          /* #181818, also the approved dark surface */
+  --ink-soft: 58 58 56;     /* #3A3A38 */
+  --ink-muted: 107 107 101; /* #6B6B65 */
+  --paper: 250 250 247;     /* #FAFAF7 */
+  --paper-raised: 255 255 255;
+  --paper-sunken: 242 241 236; /* #F2F1EC */
+  --line: 24 24 24;
+  --accent: 254 79 10;      /* #FE4F0A, from the KV logo */
+  --accent-soft: 255 233 222; /* #FFE9DE */
+  --accent-ink: 189 55 0;   /* #BD3700, AA contrast accent for small text */
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  body { @apply bg-paper font-sans text-ink antialiased; }
+  h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+  p, li, dd { text-wrap: pretty; }
+  section[id] { @apply scroll-mt-24; }
+  ::selection { background: rgb(var(--accent) / 0.2); }
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* Named text styles. Every text element uses one of these. */
+@layer components {
+  .heading-1 { @apply text-6xl font-semibold tracking-tight; }
+  .heading-2 { @apply text-5xl font-semibold tracking-tight; }
+  .heading-3 { @apply text-4xl font-semibold tracking-tight; }
+  .heading-4 { @apply text-3xl font-semibold tracking-tight; }
+  .heading-5 { @apply text-2xl font-semibold tracking-tight; }
+  .heading-6 { @apply text-xl font-semibold; }
+
+  .title-1 { @apply text-xl font-medium; }
+  .title-2 { @apply text-lg font-medium; }
+  .title-3 { @apply text-base font-medium; }
+  .title-4 { @apply text-sm font-medium; }
+  .title-5 { @apply text-xs font-medium; }
+
+  .body-1 { @apply text-base font-semibold; }
+  .body-2 { @apply text-base font-medium; }
+  .body-3 { @apply text-base font-normal; }
+  .body-4 { @apply text-sm font-semibold; }
+  .body-5 { @apply text-sm font-medium; }
+  .body-6 { @apply text-sm font-normal; }
+  /* Body 7: larger lead paragraph, built from the text-lg step */
+  .body-7 { @apply text-lg font-normal; }
+
+  .button-lg { @apply text-lg font-semibold; }
+  .button-md { @apply text-base font-semibold; }
+  .button-sm { @apply text-sm font-semibold; }
+  .button-xsm { @apply text-xs font-semibold; }
+
+  .caption-1 { @apply text-sm font-medium; }
+  .caption-2 { @apply text-sm font-normal; }
+  .caption-3 { @apply text-xs font-semibold; }
+  .caption-4 { @apply text-xs font-medium; }
+  .caption-5 { @apply text-xs font-normal; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-container px-4 sm:px-8; }
+  .eyebrow { @apply caption-3 inline-flex items-center gap-2 uppercase tracking-widest text-ink-muted; }
+  .eyebrow::before { content: ''; @apply h-1.5 w-1.5 rounded-full bg-accent; }
+  .field {
+    @apply body-3 w-full rounded-xl border border-line/10 bg-paper-raised px-4 py-3 text-ink placeholder:text-ink-muted/70
+      transition-colors duration-300 hover:border-line/20 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

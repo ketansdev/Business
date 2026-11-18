@@ -1,0 +1,26 @@
+{
+  "name": "kv-dev-studio",
+  "version": "1.0.0",
+  "description": "KV DEV STUDIO — creative digital agency website",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "framer-motion": "^11.18.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.33",
+    "tailwindcss": "3.4",
+    "vite": "^5.4.21"
+  },
+  "private": true,
+  "type": "module"
+}
